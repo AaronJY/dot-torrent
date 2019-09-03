@@ -1,4 +1,5 @@
-﻿using DotTorrent.OMDB.Exceptions;
+﻿using DotTorrent.OMDB.Enums;
+using DotTorrent.OMDB.Exceptions;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -34,9 +35,15 @@ namespace DotTorrent.OMDB
             var req = new RestRequest("", Method.GET);
             req.AddQueryParameter("i", imdbId);
 
-            IRestResponse resp = restClient.Execute(req);
+            OMDBResponse resp = this.Execute(req);
+            if (resp.Response)
+                return (OMDBTitleResponse)resp;
 
-            return JsonConvert.DeserializeObject<OMDBTitleResponse>(resp.Content);
+            var errorResponse = (OMDBErrorResponse)resp;
+            if (TitleNotFound(errorResponse))
+              return null;
+
+            throw new OMDBException(errorResponse.Error);
         }
 
         /// <summary>
@@ -52,29 +59,48 @@ namespace DotTorrent.OMDB
             var req = new RestRequest("", Method.GET);
             req.AddQueryParameter("t", title);
 
-            IRestResponse resp = restClient.Execute(req);
+            OMDBResponse resp = this.Execute(req);
+            if (resp.Response)
+                return (OMDBTitleResponse)resp;
 
-            var titleResponse = JsonConvert.DeserializeObject<OMDBTitleResponse>(resp.Content);
-            if (titleResponse.Response)
-                return titleResponse;
+            var errorResponse = (OMDBErrorResponse)resp;
+            if (TitleNotFound(errorResponse))
+              return null;
 
-            var errorResponse = JsonConvert.DeserializeObject<OMDBErrorResponse>(resp.Content);
-            switch (errorResponse.Error)
-            {
-                case "Incorrect IMDb ID.":
-                case "Movie not found!":
-                    return null;
-
-                default:
-                    throw new OMDBException(errorResponse.Error);
-            }
+            throw new OMDBException(errorResponse.Error);
         }
 
-        protected string GetEndpointUrl(string partialEndpoint)
+        protected OMDBResponse Execute(IRestRequest req)
         {
-            if (partialEndpoint == null)
-                return _BaseUrl;
-            return $"{_BaseUrl}{partialEndpoint}";
+          IRestResponse resp = restClient.Execute(req);
+
+          var titleResponse = JsonConvert.DeserializeObject<OMDBTitleResponse>(resp.Content);
+          if (titleResponse.Response)
+              return titleResponse;
+
+          var errorResponse = JsonConvert.DeserializeObject<OMDBErrorResponse>(resp.Content);
+          switch (errorResponse.Error)
+          {
+              case "Incorrect IMDb ID.":
+              case "Movie not found!":
+                  return null;
+
+              default:
+                  throw new OMDBException(errorResponse.Error);
+          }
+        }
+
+        private bool TitleNotFound(OMDBErrorResponse resp)
+        {
+          switch (resp.ErrorType)
+          {
+              case ResponseErrorType.IncorrectIMDBId:
+              case ResponseErrorType.MovieNotFound:
+                  return true;
+
+              default:
+                  return false;
+          }
         }
     }
 }
