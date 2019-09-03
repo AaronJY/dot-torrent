@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotTorrent.TorrentFinderApi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotTorrent.OMDB", "DotTorrent.OMDB\DotTorrent.OMDB.csproj", "{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTorrent.Web", "DotTorrent.Web\DotTorrent.Web.csproj", "{D7242E02-9274-4BE8-9C57-095F34FB93B7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7242E02-9274-4BE8-9C57-095F34FB93B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7242E02-9274-4BE8-9C57-095F34FB93B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7242E02-9274-4BE8-9C57-095F34FB93B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7242E02-9274-4BE8-9C57-095F34FB93B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
