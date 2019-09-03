@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29209.62
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTorrent.TorrentFinder", "DotTorrent.TorrentFinder\DotTorrent.TorrentFinder.csproj", "{556F9BD4-4FEA-42E7-9880-A173EE4BD9D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotTorrent.TorrentFinder", "DotTorrent.TorrentFinder\DotTorrent.TorrentFinder.csproj", "{556F9BD4-4FEA-42E7-9880-A173EE4BD9D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTorrent.TorrentFinderApi", "DotTorrent.TorrentFinderApi\DotTorrent.TorrentFinderApi.csproj", "{4B04FB25-2FEB-40D2-9889-D5E1BD585AA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotTorrent.TorrentFinderApi", "DotTorrent.TorrentFinderApi\DotTorrent.TorrentFinderApi.csproj", "{4B04FB25-2FEB-40D2-9889-D5E1BD585AA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTorrent.OMDB", "DotTorrent.OMDB\DotTorrent.OMDB.csproj", "{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotTorrent.OMDB", "DotTorrent.OMDB\DotTorrent.OMDB.csproj", "{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTorrent.UI", "DotTorrent.UI\DotTorrent.UI.csproj", "{C7BA8085-4676-4FB9-B3A0-93656258010A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotTorrent.Web", "DotTorrent.Web\DotTorrent.Web.csproj", "{D7242E02-9274-4BE8-9C57-095F34FB93B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5F160B5-D856-4590-AFEE-2E0CC8C0B3D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C7BA8085-4676-4FB9-B3A0-93656258010A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C7BA8085-4676-4FB9-B3A0-93656258010A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C7BA8085-4676-4FB9-B3A0-93656258010A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C7BA8085-4676-4FB9-B3A0-93656258010A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7242E02-9274-4BE8-9C57-095F34FB93B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7242E02-9274-4BE8-9C57-095F34FB93B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7242E02-9274-4BE8-9C57-095F34FB93B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7242E02-9274-4BE8-9C57-095F34FB93B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
