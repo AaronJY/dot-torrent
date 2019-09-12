@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DotTorrent.TorrentFinderApi.Controllers
 {
+    /// <summary>
+    /// Search for IMDB titles
+    /// </summary>
     [ApiController]
     [Route("api/search")]
     public class SearchController : ControllerBase
