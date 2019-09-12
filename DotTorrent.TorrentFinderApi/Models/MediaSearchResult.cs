@@ -1,5 +1,6 @@
 ﻿using DotTorrent.OMDB;
 using System;
+using System.Collections.Generic;
 
 namespace DotTorrent.TorrentFinderApi.Models
 {
@@ -11,11 +12,13 @@ namespace DotTorrent.TorrentFinderApi.Models
         {
             Title = omdbTitleResponse.Title;
             IMDBId = omdbTitleResponse.ImdbID;
+            Plot = omdbTitleResponse.Plot;
 
             if (DateTime.TryParse(omdbTitleResponse.Released, out DateTime releaseDateTime))
-            {
                 ReleaseYear = releaseDateTime.Year;
-            }
+
+            if (omdbTitleResponse.Actors != null)
+                Actors = omdbTitleResponse.Actors.Split(',');
         }
 
         public string Title { get; set; }
@@ -23,5 +26,9 @@ namespace DotTorrent.TorrentFinderApi.Models
         public int? ReleaseYear { get; set; }
 
         public string IMDBId { get; set; }
+
+        public string Plot { get; set; }
+
+        public IEnumerable<string> Actors {get;set;}
     }
 }

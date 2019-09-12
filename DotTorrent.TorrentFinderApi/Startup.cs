@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace DotTorrent.TorrentFinderApi
 {
@@ -26,7 +29,19 @@ namespace DotTorrent.TorrentFinderApi
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddScoped<IAppSettings, AppSettings>();
+            services.AddSingleton<IAppSettings, AppSettings>();
+
+            services.AddSwaggerGen(conf => {
+                conf.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "Torrent Finder API",
+                    Version = "v1"
+                });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                conf.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,8 +59,13 @@ namespace DotTorrent.TorrentFinderApi
 
             app.UseHttpsRedirection();
             app.UseMvc();
-
             app.UseCors("CorsPolicy");
+
+            app.UseSwagger();
+            app.UseSwaggerUI(conf =>
+            {
+                conf.SwaggerEndpoint("/swagger/v1/swagger.json", "Torrent Finder API V1");
+            });
         }
     }
 }

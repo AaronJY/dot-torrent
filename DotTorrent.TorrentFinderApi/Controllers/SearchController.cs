@@ -22,7 +22,7 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         /// <param name="title">IMDB title name</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("title/{title}")]
+        [Route("title")]
         public ActionResult<MediaSearchResult> SearchTitle(string title)
         {
             var omdbTitle = _omdbClient.GetByTitle(title);
@@ -38,7 +38,7 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         /// <param name="id">IMDB title ID</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("id/{id}")]
+        [Route("id")]
         public ActionResult<MediaSearchResult> SearchId(string id)
         {
             var omdbTitle = _omdbClient.GetByIMDBId(id);
