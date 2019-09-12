@@ -1,4 +1,5 @@
 ﻿using DotTorrent.OMDB;
+using DotTorrent.TorrentFinderApi.Config;
 using DotTorrent.TorrentFinderApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +9,11 @@ namespace DotTorrent.TorrentFinderApi.Controllers
     [Route("api/search")]
     public class SearchController : ControllerBase
     {
-        readonly IOMDBClient omdbClient;
+        readonly IOMDBClient _omdbClient;
 
-        public SearchController()
+        public SearchController(IAppSettings appSettings)
         {
-            omdbClient = new OMDBClient("4b9133b2");
+            _omdbClient = new OMDBClient(appSettings.OMDBApiKey);
         }
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         [Route("title/{title}")]
         public ActionResult<MediaSearchResult> SearchTitle(string title)
         {
-            var omdbTitle = omdbClient.GetByTitle(title);
+            var omdbTitle = _omdbClient.GetByTitle(title);
             if (omdbTitle == null)
                 return NotFound();
 
@@ -40,7 +41,7 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         [Route("id/{id}")]
         public ActionResult<MediaSearchResult> SearchId(string id)
         {
-            var omdbTitle = omdbClient.GetByIMDBId(id);
+            var omdbTitle = _omdbClient.GetByIMDBId(id);
             if (omdbTitle == null)
                 return NotFound();
 

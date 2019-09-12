@@ -79,15 +79,7 @@ namespace DotTorrent.OMDB
               return titleResponse;
 
           var errorResponse = JsonConvert.DeserializeObject<OMDBErrorResponse>(resp.Content);
-          switch (errorResponse.Error)
-          {
-              case "Incorrect IMDb ID.":
-              case "Movie not found!":
-                  return null;
-
-              default:
-                  throw new OMDBException(errorResponse.Error);
-          }
+          return errorResponse;
         }
 
         private bool TitleNotFound(OMDBErrorResponse resp)
