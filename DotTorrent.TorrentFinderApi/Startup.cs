@@ -31,6 +31,7 @@ namespace DotTorrent.TorrentFinderApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton<IAppSettings, AppSettings>();
+            services.AddTransient<IOMDBClient, OMDBClient>();
 
             services.AddSwaggerGen(conf => {
                 conf.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info

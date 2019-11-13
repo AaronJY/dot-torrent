@@ -6,6 +6,11 @@ namespace DotTorrent.OMDB
   {
     public string Error { get; set; }
 
+    public OMDBErrorResponse(string error)
+    {
+      Error = error;
+    }
+
     public ResponseErrorType ErrorType
     {
       get
