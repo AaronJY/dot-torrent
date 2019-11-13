@@ -2,6 +2,7 @@
 using DotTorrent.TorrentFinderApi.Config;
 using DotTorrent.TorrentFinderApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DotTorrent.TorrentFinderApi.Controllers
 {
@@ -29,7 +30,7 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("title")]
-        public ActionResult<MediaSearchResult> SearchTitle(string query)
+        public async Task<ActionResult<MediaSearchResult>> SearchTitle(string query)
         {
             var omdbTitle = _omdbClient.GetByTitle(query);
             if (omdbTitle == null)
@@ -45,7 +46,7 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("id")]
-        public ActionResult<MediaSearchResult> SearchId(string query)
+        public async Task<ActionResult<MediaSearchResult>> SearchId(string query)
         {
             var omdbTitle = _omdbClient.GetByIMDBId(query);
             if (omdbTitle == null)

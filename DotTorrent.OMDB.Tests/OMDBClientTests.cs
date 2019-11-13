@@ -21,7 +21,7 @@ namespace DotTorrent.OMDB.Tests
 
       var exception = Assert.Throws<OMDBException>(() =>
       {
-        client.GetByIMDBId(TestHelpers.GetRandomString());
+        client.GetByIMDBId(Testing.Helpers.GetRandomString());
       });
 
       Assert.AreEqual(expectedExceptionMessage, exception.Message);
@@ -37,7 +37,7 @@ namespace DotTorrent.OMDB.Tests
 
       var exception = Assert.Throws<OMDBException>(() =>
       {
-        client.GetByTitle(TestHelpers.GetRandomString());
+        client.GetByTitle(Testing.Helpers.GetRandomString());
       });
 
       Assert.AreEqual(expectedExceptionMessage, exception.Message);
@@ -47,7 +47,7 @@ namespace DotTorrent.OMDB.Tests
     public void GetByIMDBId_IfResponseReturnsError_ThrowsOMDBException()
     {
       var expectedExceptionMessage = "Mock error message";
-      var imdbID = TestHelpers.GetRandomString();
+      var imdbID = Testing.Helpers.GetRandomString();
       var errorResponseJson = $"{{ \"Error\": \"{expectedExceptionMessage}\" }}";
       var restResponse = new RestResponse
       {
@@ -65,7 +65,7 @@ namespace DotTorrent.OMDB.Tests
       {
         var client = GetTestableOMDBClient(restClientMock);
 
-        client.Setup(TestHelpers.GetRandomString());
+        client.Setup(Testing.Helpers.GetRandomString());
         client.GetByIMDBId(imdbID);
       });
 
@@ -78,7 +78,7 @@ namespace DotTorrent.OMDB.Tests
       var restClientMock = new Mock<IRestClient>();
 
       var client = GetTestableOMDBClient(restClientMock);
-      client.Setup(TestHelpers.GetRandomString());
+      client.Setup(Testing.Helpers.GetRandomString());
 
       Assert.Throws<ArgumentNullException>(() => { client.GetByIMDBId(null); });
     }
@@ -86,7 +86,7 @@ namespace DotTorrent.OMDB.Tests
     [Test]
     public void GetByIMDBId_IfResponseSuccessful_ReturnsResponse()
     {
-      var expectedResponse = GetRandomTitleResponse();
+      var expectedResponse = Testing.Helpers.GetRandomTitleResponse();
 
       var restClientMock = new Mock<IRestClient>();
       var restResponseJson = JsonConvert.SerializeObject(expectedResponse);
@@ -101,9 +101,9 @@ namespace DotTorrent.OMDB.Tests
         .Returns(restResponse);
 
       var client = GetTestableOMDBClient(restClientMock);
-      client.Setup(TestHelpers.GetRandomString());
+      client.Setup(Testing.Helpers.GetRandomString());
 
-      var response = client.GetByIMDBId(TestHelpers.GetRandomString());
+      var response = client.GetByIMDBId(Testing.Helpers.GetRandomString());
       
       AssertTitleResponsesAreEqual(expectedResponse, response);
     }
@@ -112,7 +112,7 @@ namespace DotTorrent.OMDB.Tests
     public void GetByIMDBId_WhenTitleNotFound_ReturnsNull()
     {
       var restClientMock = new Mock<IRestClient>();
-      var imdbID = TestHelpers.GetRandomString();
+      var imdbID = Testing.Helpers.GetRandomString();
       var errorMessage = "Movie not found!";
       var errorResponseJson = $"{{ \"Error\": \"{errorMessage}\" }}";
 
@@ -125,7 +125,7 @@ namespace DotTorrent.OMDB.Tests
         });
 
       var client = GetTestableOMDBClient(restClientMock);
-      client.Setup(TestHelpers.GetRandomString());
+      client.Setup(Testing.Helpers.GetRandomString());
 
       var response = client.GetByIMDBId(imdbID);
       Assert.IsNull(response);
@@ -136,7 +136,7 @@ namespace DotTorrent.OMDB.Tests
     {
       var expectedExceptionMessage = "Mock error message";
 
-      var title = TestHelpers.GetRandomString();
+      var title = Testing.Helpers.GetRandomString();
       var errorResponseJson = $"{{ \"Error\": \"{expectedExceptionMessage}\" }}";
       var restResponse = new RestResponse
       {
@@ -154,7 +154,7 @@ namespace DotTorrent.OMDB.Tests
       {
         var client = GetTestableOMDBClient(restClientMock);
 
-        client.Setup(TestHelpers.GetRandomString());
+        client.Setup(Testing.Helpers.GetRandomString());
         client.GetByTitle(title);
       });
 
@@ -167,7 +167,7 @@ namespace DotTorrent.OMDB.Tests
       var restClientMock = new Mock<IRestClient>();
 
       var client = GetTestableOMDBClient(restClientMock);
-      client.Setup(TestHelpers.GetRandomString());
+      client.Setup(Testing.Helpers.GetRandomString());
 
       Assert.Throws<ArgumentNullException>(() => { client.GetByTitle(null); });
     }
@@ -175,7 +175,7 @@ namespace DotTorrent.OMDB.Tests
     [Test]
     public void GetByTitle_IfResponseSuccessful_ReturnsResponse()
     {
-      var expectedResponse = GetRandomTitleResponse();
+      var expectedResponse = Testing.Helpers.GetRandomTitleResponse();
 
       var restClientMock = new Mock<IRestClient>();
       var restResponseJson = JsonConvert.SerializeObject(expectedResponse);
@@ -190,9 +190,9 @@ namespace DotTorrent.OMDB.Tests
         .Returns(restResponse);
 
       var client = GetTestableOMDBClient(restClientMock);
-      client.Setup(TestHelpers.GetRandomString());
+      client.Setup(Testing.Helpers.GetRandomString());
 
-      var response = client.GetByTitle(TestHelpers.GetRandomString());
+      var response = client.GetByTitle(Testing.Helpers.GetRandomString());
       
       AssertTitleResponsesAreEqual(expectedResponse, response);
     }
@@ -201,7 +201,7 @@ namespace DotTorrent.OMDB.Tests
     public void GetByTitle_WhenTitleNotFound_ReturnsNull()
     {
       var restClientMock = new Mock<IRestClient>();
-      var titleName = TestHelpers.GetRandomString();
+      var titleName = Testing.Helpers.GetRandomString();
       var errorMessage = "Movie not found!";
       var errorResponseJson = $"{{ \"Error\": \"{errorMessage}\" }}";
 
@@ -214,7 +214,7 @@ namespace DotTorrent.OMDB.Tests
         });
 
       var client = GetTestableOMDBClient(restClientMock);
-      client.Setup(TestHelpers.GetRandomString());
+      client.Setup(Testing.Helpers.GetRandomString());
 
       var response = client.GetByTitle(titleName);
       Assert.IsNull(response);
@@ -235,37 +235,6 @@ namespace DotTorrent.OMDB.Tests
         .Callback((Parameter p) => parameterSpy.Add(p));
 
       return new OMDBClient(restClientMock.Object);
-    }
-
-    OMDBTitleResponse GetRandomTitleResponse()
-    {
-      return new OMDBTitleResponse
-      {
-        Response = true,
-        Actors = TestHelpers.GetRandomString(),
-        Awards = TestHelpers.GetRandomString(),
-        BoxOffice = TestHelpers.GetRandomString(),
-        Country = TestHelpers.GetRandomString(),
-        Director = TestHelpers.GetRandomString(),
-        DVD = TestHelpers.GetRandomString(),
-        Genre = TestHelpers.GetRandomString(),
-        ImdbID = TestHelpers.GetRandomString(),
-        ImdbRating = TestHelpers.GetRandomString(),
-        ImdbVotes = TestHelpers.GetRandomString(),
-        Language = TestHelpers.GetRandomString(),
-        Metascore = TestHelpers.GetRandomString(),
-        Plot = TestHelpers.GetRandomString(),
-        Poster = TestHelpers.GetRandomString(),
-        Production = TestHelpers.GetRandomString(),
-        Rated = TestHelpers.GetRandomString(),
-        Released = TestHelpers.GetRandomString(),
-        Runtime = TestHelpers.GetRandomString(),
-        Title = TestHelpers.GetRandomString(),
-        Type = TestHelpers.GetRandomString(),
-        Website = TestHelpers.GetRandomString(),
-        Writer = TestHelpers.GetRandomString(),
-        Year = TestHelpers.GetRandomString()
-      };
     }
 
     void AssertTitleResponsesAreEqual(OMDBTitleResponse expectedResponse, OMDBTitleResponse response)
