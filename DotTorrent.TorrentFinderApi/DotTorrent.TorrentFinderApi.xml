@@ -4,18 +4,23 @@
         <name>DotTorrent.TorrentFinderApi</name>
     </assembly>
     <members>
+        <member name="T:DotTorrent.TorrentFinderApi.Controllers.SearchController">
+            <summary>
+            Search for IMDB titles
+            </summary>
+        </member>
         <member name="M:DotTorrent.TorrentFinderApi.Controllers.SearchController.SearchTitle(System.String)">
             <summary>
             Search for a title on OMDB
             </summary>
-            <param name="title">IMDB title name</param>
+            <param name="query">IMDB title name</param>
             <returns></returns>
         </member>
         <member name="M:DotTorrent.TorrentFinderApi.Controllers.SearchController.SearchId(System.String)">
             <summary>
             Searches for an IMDB title with a given IMDB ID
             </summary>
-            <param name="id">IMDB title ID</param>
+            <param name="query">IMDB title ID</param>
             <returns></returns>
         </member>
     </members>

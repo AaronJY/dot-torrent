@@ -1,4 +1,5 @@
-﻿using DotTorrent.TorrentFinderApi.Config;
+﻿using DotTorrent.OMDB;
+using DotTorrent.TorrentFinderApi.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,8 @@ namespace DotTorrent.TorrentFinderApi
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 conf.IncludeXmlComments(xmlPath);
             });
+
+            services.AddOMDBServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -14,21 +14,24 @@ namespace DotTorrent.TorrentFinderApi.Controllers
     {
         readonly IOMDBClient _omdbClient;
 
-        public SearchController(IAppSettings appSettings)
+        public SearchController(
+            IAppSettings appSettings,
+            IOMDBClient omdbClient)
         {
-            _omdbClient = new OMDBClient(appSettings.OMDBApiKey);
+            _omdbClient = omdbClient;
+            _omdbClient.Setup(appSettings.OMDBApiKey);
         }
 
         /// <summary>
         /// Search for a title on OMDB
         /// </summary>
-        /// <param name="title">IMDB title name</param>
+        /// <param name="query">IMDB title name</param>
         /// <returns></returns>
         [HttpGet]
         [Route("title")]
-        public ActionResult<MediaSearchResult> SearchTitle(string title)
+        public ActionResult<MediaSearchResult> SearchTitle(string query)
         {
-            var omdbTitle = _omdbClient.GetByTitle(title);
+            var omdbTitle = _omdbClient.GetByTitle(query);
             if (omdbTitle == null)
                 return NotFound();
 
@@ -38,13 +41,13 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         /// <summary>
         /// Searches for an IMDB title with a given IMDB ID
         /// </summary>
-        /// <param name="id">IMDB title ID</param>
+        /// <param name="query">IMDB title ID</param>
         /// <returns></returns>
         [HttpGet]
         [Route("id")]
-        public ActionResult<MediaSearchResult> SearchId(string id)
+        public ActionResult<MediaSearchResult> SearchId(string query)
         {
-            var omdbTitle = _omdbClient.GetByIMDBId(id);
+            var omdbTitle = _omdbClient.GetByIMDBId(query);
             if (omdbTitle == null)
                 return NotFound();
 

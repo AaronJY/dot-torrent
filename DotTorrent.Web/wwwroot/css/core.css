@@ -1,4 +1,12 @@
 ﻿main {
-    padding-top: 60px;
-    padding-bottom: 40px;
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+
+.dt-media-grid {
+  display: grid;
+  grid-template-columns: 0.25fr 0.25fr 0.25fr 0.25fr;
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
 }

@@ -8,18 +8,25 @@ namespace DotTorrent.OMDB
 {
     public class OMDBClient : IOMDBClient
     {
-        const string _BaseUrl = "https://www.omdbapi.com/";
+        const string BaseUrl = "https://www.omdbapi.com/";
 
         protected string apiKey;
 
-        RestClient restClient;
+        readonly IRestClient restClient;
 
-        public OMDBClient(string apiKey)
+        public OMDBClient(IRestClient restClient)
         {
-            this.apiKey = apiKey;
+            this.restClient = restClient;
+        }
 
-            restClient = new RestClient(_BaseUrl);
-            restClient.AddDefaultParameter("apikey", apiKey);
+        /// <summary>
+        /// Sets up the client with an API key
+        /// </summary>
+        /// <param name="apiKey"></param>
+        public void Setup(string apiKey)
+        {
+            restClient.BaseUrl = new Uri(BaseUrl);
+            SetApiKey(apiKey);
         }
 
         /// <summary>
@@ -40,7 +47,7 @@ namespace DotTorrent.OMDB
                 return (OMDBTitleResponse)resp;
 
             var errorResponse = (OMDBErrorResponse)resp;
-            if (TitleNotFound(errorResponse))
+            if (IsErrorResponseTitleNotFound(errorResponse))
               return null;
 
             throw new OMDBException(errorResponse.Error);
@@ -64,7 +71,7 @@ namespace DotTorrent.OMDB
                 return (OMDBTitleResponse)resp;
 
             var errorResponse = (OMDBErrorResponse)resp;
-            if (TitleNotFound(errorResponse))
+            if (IsErrorResponseTitleNotFound(errorResponse))
               return null;
 
             throw new OMDBException(errorResponse.Error);
@@ -72,6 +79,8 @@ namespace DotTorrent.OMDB
 
         protected OMDBResponse Execute(IRestRequest req)
         {
+          ThrowIfNoAPIKey();
+
           IRestResponse resp = restClient.Execute(req);
 
           var titleResponse = JsonConvert.DeserializeObject<OMDBTitleResponse>(resp.Content);
@@ -82,7 +91,19 @@ namespace DotTorrent.OMDB
           return errorResponse;
         }
 
-        private bool TitleNotFound(OMDBErrorResponse resp)
+        void ThrowIfNoAPIKey()
+        {
+          if (string.IsNullOrWhiteSpace(apiKey))
+            throw new OMDBException("No api key set.");
+        }
+
+        void SetApiKey(string apiKey)
+        {
+            this.apiKey = apiKey;
+            restClient.AddDefaultParameter(new Parameter("apikey", apiKey, ParameterType.QueryString));
+        }
+
+        bool IsErrorResponseTitleNotFound(OMDBErrorResponse resp)
         {
           switch (resp.ErrorType)
           {
