@@ -1,6 +1,7 @@
 ﻿using DotTorrent.OMDB;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DotTorrent.TorrentFinderApi.Models
 {
@@ -18,7 +19,7 @@ namespace DotTorrent.TorrentFinderApi.Models
                 ReleaseYear = releaseDateTime.Year;
 
             if (omdbTitleResponse.Actors != null)
-                Actors = omdbTitleResponse.Actors.Split(',');
+                Actors = omdbTitleResponse.Actors.Split(',').Select(x => x.Trim());
         }
 
         public string Title { get; set; }
