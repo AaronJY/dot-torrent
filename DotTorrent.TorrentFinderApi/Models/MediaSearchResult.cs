@@ -20,6 +20,8 @@ namespace DotTorrent.TorrentFinderApi.Models
 
             if (omdbTitleResponse.Actors != null)
                 Actors = omdbTitleResponse.Actors.Split(',').Select(x => x.Trim());
+            else
+                Actors = Enumerable.Empty<string>();
         }
 
         public string Title { get; set; }
@@ -30,6 +32,6 @@ namespace DotTorrent.TorrentFinderApi.Models
 
         public string Plot { get; set; }
 
-        public IEnumerable<string> Actors {get;set;}
+        public IEnumerable<string> Actors { get; set; }
     }
 }
