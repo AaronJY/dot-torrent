@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace DotTorrent.Web.Paging
 {
@@ -12,12 +9,9 @@ namespace DotTorrent.Web.Paging
 
     public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
     {
-      
     }
 
     public bool HasPreviousPage => PageIndex > 1;
     public bool HasNextPage => PageIndex < TotalPages;
-
-
   }
 }

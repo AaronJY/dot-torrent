@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DotTorrent.OMDB;
 using DotTorrent.TorrentFinderApi.Models;
 using NUnit.Framework;
 

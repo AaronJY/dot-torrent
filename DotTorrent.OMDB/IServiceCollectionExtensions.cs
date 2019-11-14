@@ -9,6 +9,7 @@ namespace DotTorrent.OMDB
     {
       services.AddTransient<IRestClient, RestClient>();
 
+
       return services;
     }
   }
