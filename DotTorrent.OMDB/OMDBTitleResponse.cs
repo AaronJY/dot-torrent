@@ -1,5 +1,8 @@
 ﻿namespace DotTorrent.OMDB
 {
+    /// <summary>
+    /// Represents the OMDB title response JSON object
+    /// </summary>
     public class OMDBTitleResponse : OMDBResponse
     {
         public string Title { get; set; }

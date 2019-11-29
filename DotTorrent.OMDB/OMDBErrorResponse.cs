@@ -15,6 +15,9 @@ namespace DotTorrent.OMDB
     {
       get
       {
+        if (Error == null)
+          return ResponseErrorType.None;
+
         switch (Error)
         {
           case "Incorrect IMDb ID.":

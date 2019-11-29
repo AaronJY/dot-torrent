@@ -5,6 +5,7 @@ namespace DotTorrent.OMDB.Tests
 {
   public class OMDBErrorResponseTests
   {
+    [TestCase(null, ResponseErrorType.None)]
     [TestCase("Incorrect IMDb ID.", ResponseErrorType.IncorrectIMDBId)]
     [TestCase("Movie not found!", ResponseErrorType.MovieNotFound)]
     [TestCase("4397xcz56ohfd7ght786rqgha", ResponseErrorType.Unknown)]
