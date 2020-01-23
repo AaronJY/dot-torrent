@@ -2,6 +2,7 @@
 using DotTorrent.TorrentFinderApi.Config;
 using DotTorrent.TorrentFinderApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DotTorrent.TorrentFinderApi.Controllers
@@ -30,13 +31,19 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("title")]
-        public async Task<ActionResult<MediaSearchResult>> SearchTitle(string query)
+        public async Task<ActionResult<SearchResult>> SearchTitle(string query)
         {
-            var omdbTitle = _omdbClient.GetByTitle(query);
+            OMDBTitleResponse omdbTitle = _omdbClient.GetByTitle(query);
             if (omdbTitle == null)
                 return NotFound();
 
-            return new MediaSearchResult(omdbTitle);
+            var result = new SearchResult
+            {
+                Media = new MediaResult(omdbTitle),
+                Torrents = new List<TorrentResult>()
+            };
+
+            return result;
         }
 
         /// <summary>
@@ -46,13 +53,19 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("id")]
-        public async Task<ActionResult<MediaSearchResult>> SearchId(string query)
+        public async Task<ActionResult<SearchResult>> SearchId(string query)
         {
-            var omdbTitle = _omdbClient.GetByIMDBId(query);
+            OMDBTitleResponse omdbTitle = _omdbClient.GetByIMDBId(query);
             if (omdbTitle == null)
                 return NotFound();
 
-            return new MediaSearchResult(omdbTitle);
+            var result = new SearchResult
+            {
+                Media = new MediaResult(omdbTitle),
+                Torrents = new List<TorrentResult>()
+            };
+
+            return result;
         }
     }
 }

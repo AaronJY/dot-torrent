@@ -1,4 +1,4 @@
-﻿
+﻿@model DotTorrent.Web.Models.SearchViewModel
 @{
     ViewData["Title"] = "Search";
     Layout = "~/Layouts/_Layout.cshtml";
@@ -7,14 +7,33 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                    <div class="input-group-text">
-                        <i class="fa fa-search"></i>
-                    </div>
-                </div>
-                <input type="text" class="form-control form-control-lg" placeholder="Movie title, or IMDB ID...">
-            </div>
+            @using(Html.BeginForm("", "Search", FormMethod.Get))
+            {
+               <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                      <div class="input-group-text">
+                          <i class="fa fa-search"></i>
+                      </div>
+                  </div>
+                  @Html.TextBoxFor(x => x.Query, new { placeholder = "Movie title, or IMDB ID...", @class = "form-control form-control-lg"})
+              </div>
+            }
         </div>
     </div>
+
+    @if (Model.ErrorMessage != null)
+    {
+      <div class="alert alert-danger">
+        <span><strong>Error: </strong> @Model.ErrorMessage</span>
+      </div>
+    }
+
+    @if (Model.SearchResult != null)
+    {
+      <div class="row">
+        <div class="col-sm-12">
+          <p>@Model.SearchResult</p>
+        </div>
+      </div>
+    }
 </div>

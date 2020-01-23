@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotTorrent.OMDB\DotTorrent.OMDB.csproj" />
+    <ProjectReference Include="..\DotTorrent.TorrentFinder\DotTorrent.TorrentFinder.csproj" />
   </ItemGroup>
 
 </Project>

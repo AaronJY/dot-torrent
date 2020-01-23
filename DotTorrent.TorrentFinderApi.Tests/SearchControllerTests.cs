@@ -30,25 +30,25 @@ namespace DotTorrent.TorrentFinderApi.Tests
         .Setup(mock => mock.GetByTitle(It.IsAny<string>()))
         .Returns(() => null);
 
-      var controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
-      var actionResult = await controller.SearchTitle(Testing.Helpers.GetRandomString());
+      SearchController controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
+      ActionResult<SearchResult> actionResult = await controller.SearchTitle(Testing.Helpers.GetRandomString());
 
       Assert.IsTrue(actionResult.Result.GetType() == typeof(NotFoundResult));
     }
 
     [Test]
-    public async Task SearchTitle_WhenTitleFound_ReturnsResult()
+    public async Task SearchTitle_WhenTitleFound_ReturnsCorrectMediaResult()
     {
-      var titleResponse = Testing.Helpers.GetRandomTitleResponse();
+      OMDBTitleResponse titleResponse = Testing.Helpers.GetRandomTitleResponse();
 
       _omdbClientMock
         .Setup(mock => mock.GetByTitle(It.IsAny<string>()))
         .Returns(titleResponse);
 
-      var controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
-      var mediaSearchResult = (await controller.SearchTitle(Testing.Helpers.GetRandomString())).Value;
+      SearchController controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
+      SearchResult searchResult = (await controller.SearchTitle(Testing.Helpers.GetRandomString())).Value;
 
-      AssertOMDBTitleResponseIsEqualToMediaSearchResult(titleResponse, mediaSearchResult);
+      AssertOMDBTitleResponseIsEqualToMediaSearchResult(titleResponse, searchResult.Media);
     }
 
     [Test]
@@ -58,25 +58,25 @@ namespace DotTorrent.TorrentFinderApi.Tests
         .Setup(mock => mock.GetByIMDBId(It.IsAny<string>()))
         .Returns(() => null);
 
-      var controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
-      var actionResult = await controller.SearchId(Testing.Helpers.GetRandomString());
+      SearchController controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
+      ActionResult<SearchResult> actionResult = await controller.SearchId(Testing.Helpers.GetRandomString());
 
       Assert.IsTrue(actionResult.Result.GetType() == typeof(NotFoundResult));
     }
 
     [Test]
-    public async Task SearchId_WhenTitleFound_ReturnsResult()
+    public async Task SearchId_WhenTitleFound_ReturnsCorrectMediaResult()
     {
-      var titleResponse = Testing.Helpers.GetRandomTitleResponse();
+      OMDBTitleResponse titleResponse = Testing.Helpers.GetRandomTitleResponse();
 
       _omdbClientMock
         .Setup(mock => mock.GetByIMDBId(It.IsAny<string>()))
         .Returns(titleResponse);
 
-      var controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
-      var mediaSearchResult = (await controller.SearchId(Testing.Helpers.GetRandomString())).Value;
+      SearchController controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
+      SearchResult searchResult = (await controller.SearchId(Testing.Helpers.GetRandomString())).Value;
 
-      AssertOMDBTitleResponseIsEqualToMediaSearchResult(titleResponse, mediaSearchResult);
+      AssertOMDBTitleResponseIsEqualToMediaSearchResult(titleResponse, searchResult.Media);
     }
 
     SearchController GetTestableSearchController(Mock<IAppSettings> appSettingsMock, Mock<IOMDBClient> omdbClientMock)
@@ -89,7 +89,7 @@ namespace DotTorrent.TorrentFinderApi.Tests
         omdbClientMock.Object);
     }
 
-    void AssertOMDBTitleResponseIsEqualToMediaSearchResult(OMDBTitleResponse expected, MediaSearchResult result)
+    void AssertOMDBTitleResponseIsEqualToMediaSearchResult(OMDBTitleResponse expected, MediaResult result)
     {
       var expectedActors = expected.Actors.Split(',').Select(actor => actor.Trim());
 

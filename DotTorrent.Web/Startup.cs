@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using DotTorrent.Web.Config;
+using DotTorrent.Web.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using RestSharp;
 
 namespace DotTorrent.Web
 {
@@ -11,6 +14,10 @@ namespace DotTorrent.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddSingleton<ITorrentFinderHttpService, TorrentFinderHttpService>();
+            services.AddSingleton<IAppSettings, AppSettings>();
+            services.AddTransient<IRestClient, RestClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

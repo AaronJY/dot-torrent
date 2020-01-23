@@ -14,7 +14,7 @@ namespace DotTorrent.TorrentFinderApi.Tests
             var expectedReleaseYear = DateTime.Parse(titleResponse.Released).Year;
             var expectedActors = titleResponse.Actors.Split(',').Select(actor => actor.Trim());
 
-            var result = new MediaSearchResult(titleResponse);
+            var result = new MediaResult(titleResponse);
 
             Assert.AreEqual(titleResponse.Title, result.Title);
             Assert.AreEqual(titleResponse.ImdbID, result.IMDBId);
@@ -29,7 +29,7 @@ namespace DotTorrent.TorrentFinderApi.Tests
             var titleResponse = Testing.Helpers.GetRandomTitleResponse();
             titleResponse.Released = null;
 
-            var result = new MediaSearchResult(titleResponse);
+            var result = new MediaResult(titleResponse);
             
             Assert.IsNull(result.ReleaseYear);
         }
@@ -40,7 +40,7 @@ namespace DotTorrent.TorrentFinderApi.Tests
             var titleResponse = Testing.Helpers.GetRandomTitleResponse();
             titleResponse.Actors = null;
 
-            var result = new MediaSearchResult(titleResponse);
+            var result = new MediaResult(titleResponse);
             
             Assert.IsEmpty(result.Actors);
         }
