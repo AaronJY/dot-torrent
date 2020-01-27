@@ -1,5 +1,6 @@
 ﻿using DotTorrent.Web.Models;
 using DotTorrent.Web.Services;
+using DotTorrent.Web.Services.Responses;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -31,14 +32,14 @@ namespace DotTorrent.Web.Controllers
             {
                 try
                 {
-                    object result = await torrentFinderHttpService.SearchTitle(query);
-                    if (result == null)
+                    ITorrentFinderResponse result = await torrentFinderHttpService.SearchTitle(query);
+                    if (!result.Successful)
                     {
                         viewModel.ErrorMessage = $"We couldn't find any titles matching the search term \"{query}\"";
                     }
                     else
                     {
-                        viewModel.SearchResult = result;
+                        viewModel.SearchResult = new SearchResultViewModel((TorrentResponse)result);
                     }
                 }
                 catch (Exception ex)

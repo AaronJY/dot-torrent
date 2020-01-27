@@ -3,7 +3,9 @@
   public class SearchViewModel : IModelError
   {
     public string Query { get; set; }
-    public object SearchResult { get; set; }
-    public string ErrorMessage { get; set;}
+
+    public SearchResultViewModel SearchResult { get; set; }
+
+    public string ErrorMessage { get; set; }
   }
 }

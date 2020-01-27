@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using DotTorrent.Web.Services.Responses;
+using System.Threading.Tasks;
 
 namespace DotTorrent.Web.Services
 {
   public interface ITorrentFinderHttpService
   {
     void SearchIMDBId(string IMDBID);
-    Task<object> SearchTitle(string title);
+
+    Task<ITorrentFinderResponse> SearchTitle(string title);
   }
 }
