@@ -2,13 +2,15 @@
 
 namespace DotTorrent.TorrentFinderApi.Controllers
 {
-    [Route("api/")]
-    [ApiController]
-    public class DefaultController : ControllerBase
+  [Route("api/")]
+  [ApiController]
+  public class DefaultController : ControllerBase
+  {
+    [HttpGet]
+    [Route("")]
+    public ActionResult Index()
     {
-      public ActionResult Index()
-      {
-          return Content("We're up!");
-      }
+      return Content("We're up!");
     }
+  }
 }

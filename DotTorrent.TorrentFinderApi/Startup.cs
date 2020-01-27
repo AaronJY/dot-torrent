@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Reflection;
+using AutoMapper;
 
 namespace DotTorrent.TorrentFinderApi
 {
@@ -46,6 +47,8 @@ namespace DotTorrent.TorrentFinderApi
             });
 
             services.AddOMDBServices();
+
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

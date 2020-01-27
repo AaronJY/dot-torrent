@@ -1,4 +1,5 @@
-﻿using DotTorrent.OMDB;
+﻿using AutoMapper;
+using DotTorrent.OMDB;
 using DotTorrent.TorrentFinderApi.Config;
 using DotTorrent.TorrentFinderApi.Models;
 using Microsoft.AspNetCore.Mvc;

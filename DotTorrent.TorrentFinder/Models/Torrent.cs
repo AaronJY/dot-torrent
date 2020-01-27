@@ -14,5 +14,9 @@ namespace DotTorrent.TorrentFinder.Models
     public DateTime AddedDate { get; set; }
 
     public int FileCount { get; set; }
+
+    public string TrackerName { get; set; }
+
+    public string TrackerUrl { get; set; }
   }
 }
