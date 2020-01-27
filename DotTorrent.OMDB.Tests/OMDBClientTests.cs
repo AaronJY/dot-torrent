@@ -6,6 +6,7 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace DotTorrent.OMDB.Tests
 {
@@ -19,9 +20,9 @@ namespace DotTorrent.OMDB.Tests
       var restClientMock = new Mock<IRestClient>();
       var client = GetTestableOMDBClient(restClientMock);
 
-      var exception = Assert.Throws<OMDBException>(() =>
+      var exception = Assert.ThrowsAsync<OMDBException>(async () =>
       {
-        client.GetByIMDBId(Testing.Helpers.GetRandomString());
+        await client.GetByIMDBId(Testing.Helpers.GetRandomString());
       });
 
       Assert.AreEqual(expectedExceptionMessage, exception.Message);
@@ -35,9 +36,9 @@ namespace DotTorrent.OMDB.Tests
       var restClientMock = new Mock<IRestClient>();
       var client = GetTestableOMDBClient(restClientMock);
 
-      var exception = Assert.Throws<OMDBException>(() =>
+      var exception = Assert.ThrowsAsync<OMDBException>(async () =>
       {
-        client.GetByTitle(Testing.Helpers.GetRandomString());
+        await client.GetByTitle(Testing.Helpers.GetRandomString());
       });
 
       Assert.AreEqual(expectedExceptionMessage, exception.Message);
@@ -49,7 +50,7 @@ namespace DotTorrent.OMDB.Tests
       var expectedExceptionMessage = "Mock error message";
       var imdbID = Testing.Helpers.GetRandomString();
       var errorResponseJson = $"{{ \"Error\": \"{expectedExceptionMessage}\" }}";
-      var restResponse = new RestResponse
+      IRestResponse restResponse = new RestResponse
       {
         StatusCode = HttpStatusCode.InternalServerError,
         Content = errorResponseJson
@@ -58,15 +59,15 @@ namespace DotTorrent.OMDB.Tests
       var restClientMock = new Mock<IRestClient>();
 
       restClientMock
-        .Setup(mock => mock.Execute(It.IsAny<IRestRequest>()))
-        .Returns(restResponse);
+        .Setup(mock => mock.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+        .Returns(Task.FromResult(restResponse));
 
-      var exception = Assert.Throws<OMDBException>(() =>
+      OMDBClient client = GetTestableOMDBClient(restClientMock);
+      client.Setup(Testing.Helpers.GetRandomString());
+
+      OMDBException exception = Assert.ThrowsAsync<OMDBException>(async () =>
       {
-        var client = GetTestableOMDBClient(restClientMock);
-
-        client.Setup(Testing.Helpers.GetRandomString());
-        client.GetByIMDBId(imdbID);
+        await client.GetByIMDBId(imdbID);
       });
 
       Assert.AreEqual(expectedExceptionMessage, exception.Message);
@@ -80,54 +81,56 @@ namespace DotTorrent.OMDB.Tests
       var client = GetTestableOMDBClient(restClientMock);
       client.Setup(Testing.Helpers.GetRandomString());
 
-      Assert.Throws<ArgumentNullException>(() => { client.GetByIMDBId(null); });
+      Assert.ThrowsAsync<ArgumentNullException>(async () => { await client.GetByIMDBId(null); });
     }
 
     [Test]
-    public void GetByIMDBId_IfResponseSuccessful_ReturnsResponse()
+    public async Task GetByIMDBId_IfResponseSuccessful_ReturnsResponse()
     {
       var expectedResponse = Testing.Helpers.GetRandomTitleResponse();
 
       var restClientMock = new Mock<IRestClient>();
       var restResponseJson = JsonConvert.SerializeObject(expectedResponse);
-      var restResponse = new RestResponse
+      IRestResponse restResponse = new RestResponse
       {
         Content = restResponseJson,
         StatusCode = HttpStatusCode.OK
       };
 
       restClientMock
-        .Setup(mock => mock.Execute(It.IsAny<IRestRequest>()))
-        .Returns(restResponse);
+        .Setup(mock => mock.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+        .Returns(Task.FromResult(restResponse));
 
       var client = GetTestableOMDBClient(restClientMock);
       client.Setup(Testing.Helpers.GetRandomString());
 
-      var response = client.GetByIMDBId(Testing.Helpers.GetRandomString());
+      var response = await client.GetByIMDBId(Testing.Helpers.GetRandomString());
       
       AssertTitleResponsesAreEqual(expectedResponse, response);
     }
 
     [Test]
-    public void GetByIMDBId_WhenTitleNotFound_ReturnsNull()
+    public async Task GetByIMDBId_WhenTitleNotFound_ReturnsNull()
     {
       var restClientMock = new Mock<IRestClient>();
       var imdbID = Testing.Helpers.GetRandomString();
       var errorMessage = "Movie not found!";
       var errorResponseJson = $"{{ \"Error\": \"{errorMessage}\" }}";
 
+      IRestResponse restResult = new RestResponse
+      {
+        StatusCode = HttpStatusCode.NotFound,
+        Content = errorResponseJson
+      };
+
       restClientMock
-        .Setup(mock => mock.Execute(It.IsAny<IRestRequest>()))
-        .Returns(new RestResponse
-        {
-          StatusCode = HttpStatusCode.NotFound,
-          Content = errorResponseJson
-        });
+        .Setup(mock => mock.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+        .Returns(Task.FromResult(restResult));
 
       var client = GetTestableOMDBClient(restClientMock);
       client.Setup(Testing.Helpers.GetRandomString());
 
-      var response = client.GetByIMDBId(imdbID);
+      var response = await client.GetByIMDBId(imdbID);
       Assert.IsNull(response);
     }
 
@@ -138,7 +141,7 @@ namespace DotTorrent.OMDB.Tests
 
       var title = Testing.Helpers.GetRandomString();
       var errorResponseJson = $"{{ \"Error\": \"{expectedExceptionMessage}\" }}";
-      var restResponse = new RestResponse
+      IRestResponse restResponse = new RestResponse
       {
         StatusCode = HttpStatusCode.InternalServerError,
         Content = errorResponseJson
@@ -147,15 +150,15 @@ namespace DotTorrent.OMDB.Tests
       var restClientMock = new Mock<IRestClient>();
 
       restClientMock
-        .Setup(mock => mock.Execute(It.IsAny<IRestRequest>()))
-        .Returns(restResponse);
+        .Setup(mock => mock.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+        .Returns(Task.FromResult(restResponse));
 
-      var exception = Assert.Throws<OMDBException>(() =>
+      var exception = Assert.ThrowsAsync<OMDBException>(async () =>
       {
         var client = GetTestableOMDBClient(restClientMock);
 
         client.Setup(Testing.Helpers.GetRandomString());
-        client.GetByTitle(title);
+        await client.GetByTitle(title);
       });
 
       Assert.AreEqual(expectedExceptionMessage, exception.Message);
@@ -169,54 +172,56 @@ namespace DotTorrent.OMDB.Tests
       var client = GetTestableOMDBClient(restClientMock);
       client.Setup(Testing.Helpers.GetRandomString());
 
-      Assert.Throws<ArgumentNullException>(() => { client.GetByTitle(null); });
+      Assert.ThrowsAsync<ArgumentNullException>(async () => { await client.GetByTitle(null); });
     }
 
     [Test]
-    public void GetByTitle_IfResponseSuccessful_ReturnsResponse()
+    public async Task GetByTitle_IfResponseSuccessful_ReturnsResponse()
     {
       var expectedResponse = Testing.Helpers.GetRandomTitleResponse();
 
       var restClientMock = new Mock<IRestClient>();
       var restResponseJson = JsonConvert.SerializeObject(expectedResponse);
-      var restResponse = new RestResponse
+      IRestResponse restResponse = new RestResponse
       {
         Content = restResponseJson,
         StatusCode = HttpStatusCode.OK
       };
 
       restClientMock
-        .Setup(mock => mock.Execute(It.IsAny<IRestRequest>()))
-        .Returns(restResponse);
+        .Setup(mock => mock.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+        .Returns(Task.FromResult(restResponse));
 
       var client = GetTestableOMDBClient(restClientMock);
       client.Setup(Testing.Helpers.GetRandomString());
 
-      var response = client.GetByTitle(Testing.Helpers.GetRandomString());
+      var response = await client.GetByTitle(Testing.Helpers.GetRandomString());
       
       AssertTitleResponsesAreEqual(expectedResponse, response);
     }
 
     [Test]
-    public void GetByTitle_WhenTitleNotFound_ReturnsNull()
+    public async Task GetByTitle_WhenTitleNotFound_ReturnsNull()
     {
       var restClientMock = new Mock<IRestClient>();
       var titleName = Testing.Helpers.GetRandomString();
       var errorMessage = "Movie not found!";
       var errorResponseJson = $"{{ \"Error\": \"{errorMessage}\" }}";
 
+      IRestResponse restResponse = new RestResponse
+      {
+        StatusCode = HttpStatusCode.NotFound,
+        Content = errorResponseJson
+      };
+
       restClientMock
-        .Setup(mock => mock.Execute(It.IsAny<IRestRequest>()))
-        .Returns(new RestResponse
-        {
-          StatusCode = HttpStatusCode.NotFound,
-          Content = errorResponseJson
-        });
+        .Setup(mock => mock.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+        .Returns(Task.FromResult(restResponse));
 
       var client = GetTestableOMDBClient(restClientMock);
       client.Setup(Testing.Helpers.GetRandomString());
 
-      var response = client.GetByTitle(titleName);
+      var response = await client.GetByTitle(titleName);
       Assert.IsNull(response);
     }
 

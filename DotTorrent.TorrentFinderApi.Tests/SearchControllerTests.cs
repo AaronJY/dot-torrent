@@ -28,7 +28,7 @@ namespace DotTorrent.TorrentFinderApi.Tests
     {
       _omdbClientMock
         .Setup(mock => mock.GetByTitle(It.IsAny<string>()))
-        .Returns(() => null);
+        .Returns(() => Task.FromResult<OMDBTitleResponse>(null));
 
       SearchController controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
       ActionResult<SearchResult> actionResult = await controller.SearchTitle(Testing.Helpers.GetRandomString());
@@ -43,7 +43,7 @@ namespace DotTorrent.TorrentFinderApi.Tests
 
       _omdbClientMock
         .Setup(mock => mock.GetByTitle(It.IsAny<string>()))
-        .Returns(titleResponse);
+        .Returns(Task.FromResult(titleResponse));
 
       SearchController controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
       SearchResult searchResult = (await controller.SearchTitle(Testing.Helpers.GetRandomString())).Value;
@@ -56,7 +56,7 @@ namespace DotTorrent.TorrentFinderApi.Tests
     {
       _omdbClientMock
         .Setup(mock => mock.GetByIMDBId(It.IsAny<string>()))
-        .Returns(() => null);
+        .Returns(() => Task.FromResult<OMDBTitleResponse>(null));
 
       SearchController controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
       ActionResult<SearchResult> actionResult = await controller.SearchId(Testing.Helpers.GetRandomString());
@@ -71,7 +71,7 @@ namespace DotTorrent.TorrentFinderApi.Tests
 
       _omdbClientMock
         .Setup(mock => mock.GetByIMDBId(It.IsAny<string>()))
-        .Returns(titleResponse);
+        .Returns(Task.FromResult(titleResponse));
 
       SearchController controller = GetTestableSearchController(_appSettingsMock, _omdbClientMock);
       SearchResult searchResult = (await controller.SearchId(Testing.Helpers.GetRandomString())).Value;

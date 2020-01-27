@@ -33,7 +33,7 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         [Route("title")]
         public async Task<ActionResult<SearchResult>> SearchTitle(string query)
         {
-            OMDBTitleResponse omdbTitle = _omdbClient.GetByTitle(query);
+            OMDBTitleResponse omdbTitle = await _omdbClient.GetByTitle(query);
             if (omdbTitle == null)
                 return NotFound();
 
@@ -55,7 +55,7 @@ namespace DotTorrent.TorrentFinderApi.Controllers
         [Route("id")]
         public async Task<ActionResult<SearchResult>> SearchId(string query)
         {
-            OMDBTitleResponse omdbTitle = _omdbClient.GetByIMDBId(query);
+            OMDBTitleResponse omdbTitle = await _omdbClient.GetByIMDBId(query);
             if (omdbTitle == null)
                 return NotFound();
 
