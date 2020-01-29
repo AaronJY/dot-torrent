@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace DotTorrent.Web.Controllers
 {
     [Route("")]
-    [Route("search")]
     public class SearchController : Controller
     {
         readonly ITorrentFinderHttpService torrentFinderHttpService;
@@ -19,7 +18,6 @@ namespace DotTorrent.Web.Controllers
             this.torrentFinderHttpService = torrentFinderHttpService;
         }
 
-        [HttpGet]
         [Route("")]
         public async Task<IActionResult> Index(string query = null)
         {

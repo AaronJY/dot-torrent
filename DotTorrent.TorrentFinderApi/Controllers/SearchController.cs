@@ -3,6 +3,7 @@ using DotTorrent.OMDB;
 using DotTorrent.TorrentFinderApi.Config;
 using DotTorrent.TorrentFinderApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -42,6 +43,17 @@ namespace DotTorrent.TorrentFinderApi.Controllers
             {
                 Media = new MediaResult(omdbTitle),
                 Torrents = new List<TorrentResult>()
+                {
+                   new TorrentResult
+                   {
+                       Name = "Placeholder torrent",
+                       AddedDate = DateTime.Now,
+                       FileCount = 2,
+                       SizeInBytes = 1234567,
+                       TrackerName = "Placeholder tracker",
+                       TrackerUrl = "http://localhost"
+                   }
+                }
             };
 
             return result;

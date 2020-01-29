@@ -1,0 +1,13 @@
+﻿@model DotTorrent.Web.Models.TorrentViewModel
+
+<div class="torrent">
+  <div class="media">
+    <img src="https://via.placeholder.com/64" class="mr-3" alt="@Model.TrackerName icon">
+    <div class="media-body">
+      <h5 class="mt-0">@Model.TrackerName</h5>
+      <p>@Model.TrackerUrl</p>
+      <p>@Model.Name (@Model.PrettySize)</p>
+      <p>Added: @Model.AddedDate.ToString()</p>
+    </div>
+  </div>
+</div>

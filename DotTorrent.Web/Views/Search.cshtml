@@ -1,4 +1,6 @@
-﻿@model DotTorrent.Web.Models.SearchViewModel
+﻿@using DotTorrent.Web.Models
+@model SearchViewModel
+
 @{
     ViewData["Title"] = "Search";
     Layout = "~/Layouts/_Layout.cshtml";
@@ -42,10 +44,18 @@
         </div>
         <div class="col-sm-12 col-md-6">
           <p>Release Year: @Model.SearchResult.Media.ReleaseYear</p>
-          <p>Actors: @(Model.SearchResult.Media.Actors)</p>
+          <p>Actors: @string.Join(", ", Model.SearchResult.Media.Actors).Trim()</p>
           <p>IMDB ID: @Model.SearchResult.Media.IMDBId</p>
           <p>Plot: @Model.SearchResult.Media.Plot</p>
         </div>
       </div>
+
+      <h3>Torrents</h3>
+      <hr />
+
+      @foreach (TorrentViewModel torrentVm in Model.SearchResult.Torrents)
+      {
+        @await Html.PartialAsync("~/Views/Partials/TorrentPartial.cshtml", torrentVm)
+      }
     }
 </div>

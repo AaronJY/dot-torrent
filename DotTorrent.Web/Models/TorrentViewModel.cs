@@ -1,4 +1,5 @@
-﻿using DotTorrent.Web.Services.Responses;
+﻿using DotTorrent.Web.Common;
+using DotTorrent.Web.Services.Responses;
 using System;
 
 namespace DotTorrent.Web.Models
@@ -9,6 +10,8 @@ namespace DotTorrent.Web.Models
 
     public ulong SizeInBytes { get; set; }
 
+    public string PrettySize => Conversion.DisplaySizeFromBytes(SizeInBytes);
+
     public DateTime AddedDate { get; set; }
 
     public int FileCount { get; set; }
@@ -16,6 +19,8 @@ namespace DotTorrent.Web.Models
     public string TrackerName { get; set; }
 
     public string TrackerUrl { get; set; }
+
+    public string IconImageUrl { get; set; }
 
     public TorrentViewModel(TorrentResponse resp)
     {
@@ -25,6 +30,8 @@ namespace DotTorrent.Web.Models
       FileCount = resp.FileCount;
       TrackerName = resp.TrackerName;
       TrackerUrl = resp.TrackerUrl;
+
+      IconImageUrl = "https://via.placeholder.com/64";
     }
   }
 }
