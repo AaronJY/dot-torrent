@@ -24,12 +24,18 @@ namespace DotTorrent.Web.Services
 
         public async Task<ITorrentFinderResponse> SearchTitle(string title)
         {
+            if (string.IsNullOrWhiteSpace(title))
+                throw new ArgumentNullException(nameof(title));
+
             var req = new RestRequest("search/title").AddParameter("query", title);
             return await ExecuteTorrentFinderApiRequestAsync<TitleResponse>(req);
         }
 
         public async Task<ITorrentFinderResponse> SearchIMDBId(string IMDBID)
         {
+            if (string.IsNullOrWhiteSpace(IMDBID))
+                throw new ArgumentNullException(nameof(IMDBID));
+
             var req = new RestRequest("search/id").AddParameter("query", IMDBID);
             return await ExecuteTorrentFinderApiRequestAsync<TitleResponse>(req);
         }
