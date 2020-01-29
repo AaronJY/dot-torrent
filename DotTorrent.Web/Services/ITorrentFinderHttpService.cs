@@ -3,10 +3,10 @@ using System.Threading.Tasks;
 
 namespace DotTorrent.Web.Services
 {
-  public interface ITorrentFinderHttpService
-  {
-    void SearchIMDBId(string IMDBID);
+    public interface ITorrentFinderHttpService
+    {
+        Task<ITorrentFinderResponse> SearchTitle(string title);
 
-    Task<ITorrentFinderResponse> SearchTitle(string title);
-  }
+        Task<ITorrentFinderResponse> SearchIMDBId(string IMDBID);
+    }
 }

@@ -35,7 +35,7 @@ namespace DotTorrent.Web.Controllers
                     ITorrentFinderResponse result = await torrentFinderHttpService.SearchTitle(query);
                     if (!result.Successful)
                     {
-                        viewModel.ErrorMessage = $"We couldn't find any titles matching the search term \"{query}\"";
+                        viewModel.ErrorMessage = $"We couldn't find any titles matching the search term \"{query}\".";
                     }
                     else
                     {

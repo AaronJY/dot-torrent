@@ -24,19 +24,25 @@ namespace DotTorrent.Web.Services
 
         public async Task<ITorrentFinderResponse> SearchTitle(string title)
         {
-            var req = new RestRequest("search/title")
-                .AddParameter("query", title);
-
-            IRestResponse resp = await restClient.ExecuteTaskAsync(req);
-            if (!resp.IsSuccessful)
-                return JsonConvert.DeserializeObject<ErrorResponse>(resp.Content);
-
-            return JsonConvert.DeserializeObject<TitleResponse>(resp.Content);
+            var req = new RestRequest("search/title").AddParameter("query", title);
+            return await ExecuteTorrentFinderApiRequestAsync<TitleResponse>(req);
         }
 
-        public void SearchIMDBId(string IMDBID)
+        public async Task<ITorrentFinderResponse> SearchIMDBId(string IMDBID)
         {
-            throw new NotImplementedException();
+            var req = new RestRequest("search/id").AddParameter("query", IMDBID);
+            return await ExecuteTorrentFinderApiRequestAsync<TitleResponse>(req);
+        }
+
+        async Task<ITorrentFinderResponse> ExecuteTorrentFinderApiRequestAsync<T>(IRestRequest req) where T : ITorrentFinderResponse
+        {
+          IRestResponse resp = await restClient.ExecuteTaskAsync(req);
+
+          // Any unsuccessful response should be possible to parse as an ErrorResponse
+          if (!resp.IsSuccessful)
+              return JsonConvert.DeserializeObject<ErrorResponse>(resp.Content);
+
+          return JsonConvert.DeserializeObject<T>(resp.Content);
         }
     }
 }
