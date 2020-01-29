@@ -3,7 +3,7 @@ using System;
 
 namespace DotTorrent.Web.Services.Responses
 {
-    public class TorrentResponse : ITorrentFinderResponse
+    public class TorrentResponse
     {
         public string Name { get; set; }
 
@@ -16,12 +16,5 @@ namespace DotTorrent.Web.Services.Responses
         public string TrackerName { get; set; }
 
         public string TrackerUrl { get; set; }
-
-        public bool Successful { get; private set; }
-
-        public TorrentResponse()
-        { 
-            Successful = true;
-        }
     }
 }

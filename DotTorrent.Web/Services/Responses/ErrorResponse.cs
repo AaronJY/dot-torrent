@@ -2,13 +2,8 @@
 {
   public class ErrorResponse : ITorrentFinderResponse
   {
-    public bool Successful { get; }
+    public bool Successful => false;
 
     string Error { get; }
-
-    public ErrorResponse()
-    {
-      Successful = false;
-    }
   }
 }

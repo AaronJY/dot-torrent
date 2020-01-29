@@ -32,7 +32,19 @@
     {
       <div class="row">
         <div class="col-sm-12">
-          <p>@Model.SearchResult</p>
+          <h2>@Model.SearchResult.Media.Title</h2>
+          <hr />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <img src="@Model.SearchResult.Media.PosterUrl" />
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <p>Release Year: @Model.SearchResult.Media.ReleaseYear</p>
+          <p>Actors: @(Model.SearchResult.Media.Actors)</p>
+          <p>IMDB ID: @Model.SearchResult.Media.IMDBId</p>
+          <p>Plot: @Model.SearchResult.Media.Plot</p>
         </div>
       </div>
     }

@@ -39,7 +39,7 @@ namespace DotTorrent.Web.Controllers
                     }
                     else
                     {
-                        viewModel.SearchResult = new SearchResultViewModel((TorrentResponse)result);
+                        viewModel.SearchResult = new SearchResultViewModel((TitleResponse)result);
                     }
                 }
                 catch (Exception ex)

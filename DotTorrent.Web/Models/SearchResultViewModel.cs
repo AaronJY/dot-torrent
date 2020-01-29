@@ -1,30 +1,19 @@
 ﻿using DotTorrent.Web.Services.Responses;
-using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DotTorrent.Web.Models
 {
   public class SearchResultViewModel
+  {
+    public MediaViewModel Media { get; set; }
+
+    public IEnumerable<TorrentViewModel> Torrents { get; set; }
+
+    public SearchResultViewModel(TitleResponse resp)
     {
-        public string Name { get; set; }
-
-        public ulong SizeInBytes { get; set; }
-
-        public DateTime AddedDate { get; set; }
-
-        public int FileCount { get; set; }
-
-        public string TrackerName { get; set; }
-
-        public string TrackerUrl { get; set; }
-
-        public SearchResultViewModel(TorrentResponse resp)
-        {
-          Name = resp.Name;
-          SizeInBytes = resp.SizeInBytes;
-          AddedDate = resp.AddedDate;
-          FileCount = resp.FileCount;
-          TrackerName = resp.TrackerName;
-          TrackerUrl = resp.TrackerUrl;
-        }
+      Media = new MediaViewModel(resp.Media);
+      Torrents = resp.Torrents.Select(x => new TorrentViewModel(x));
     }
+  }
 }

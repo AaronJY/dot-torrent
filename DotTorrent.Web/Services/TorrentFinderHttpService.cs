@@ -25,14 +25,13 @@ namespace DotTorrent.Web.Services
         public async Task<ITorrentFinderResponse> SearchTitle(string title)
         {
             var req = new RestRequest("search/title")
-              .AddParameter("query", title);
+                .AddParameter("query", title);
 
             IRestResponse resp = await restClient.ExecuteTaskAsync(req);
             if (!resp.IsSuccessful)
                 return JsonConvert.DeserializeObject<ErrorResponse>(resp.Content);
 
-            var test =  JsonConvert.DeserializeObject<TorrentResponse>(resp.Content);
-            return test;
+            return JsonConvert.DeserializeObject<TitleResponse>(resp.Content);
         }
 
         public void SearchIMDBId(string IMDBID)
