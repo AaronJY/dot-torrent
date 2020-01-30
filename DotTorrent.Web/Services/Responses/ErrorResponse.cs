@@ -4,6 +4,6 @@
   {
     public bool Successful => false;
 
-    string Error { get; }
+    public string Error { get; }
   }
 }

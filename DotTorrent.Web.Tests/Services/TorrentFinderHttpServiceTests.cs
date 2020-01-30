@@ -5,62 +5,107 @@ using DotTorrent.Web.Services.Responses;
 using Moq;
 using NUnit.Framework;
 using RestSharp;
+using System;
 using System.Threading.Tasks;
 
 namespace DotTorrent.Web.Tests.Services
 {
-  public class TorrentFinderHttpServiceTests
-  {
-    ITorrentFinderHttpService service;
-    Mock<IAppSettings> appSettingsMock;
-    Mock<IRestClient> restClientMock;
-
-    [SetUp]
-    public void Setup()
+    public class TorrentFinderHttpServiceTests
     {
-      appSettingsMock = new Mock<IAppSettings>();
-      appSettingsMock.SetupGet(x => x.TorrentFinderApiUrl).Returns("https://www.google.com");
+        ITorrentFinderHttpService service;
+        Mock<IAppSettings> appSettingsMock;
+        Mock<IRestClient> restClientMock;
 
-      restClientMock = new Mock<IRestClient>();
+        private const string SuccessfulRestResponseJSON = "{\"media\":{\"title\":\"Alien\",\"releaseYear\":1979,\"imdbId\":\"tt0078748\",\"plot\":\"After a space merchant vessel perceives an unknown transmission as a distress call, its landing on the source moon finds one of the crew attacked by a mysterious lifeform, and they soon realize that its life cycle has merely begun.\",\"actors\":[\"Tom Skerritt\",\"Sigourney Weaver\",\"Veronica Cartwright\",\"Harry Dean Stanton\"],\"posterUrl\":\"https://m.media-amazon.com/images/M/MV5BMmQ2MmU3NzktZjAxOC00ZDZhLTk4YzEtMDMyMzcxY2IwMDAyXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg\"},\"torrents\":[{\"name\":\"Placeholder torrent\",\"sizeInBytes\":1234567,\"addedDate\":\"2020-01-29T16:29:39.2397817+00:00\",\"fileCount\":2,\"trackerName\":\"Placeholder tracker\",\"trackerUrl\":\"http://localhost\"}]}";
+        private const string UnSuccessfulRestResponseJSON = "{\"successful\":\"false\",\"error\":\"Something went wrong!\"}";
 
-      service = new TorrentFinderHttpService(
-        appSettingsMock.Object, restClientMock.Object);
-    }
-
-    [Test]
-    public async Task SearchTitle_WhenSuccessful_ReturnsTitleResponse()
-    {
-        // Arrange
-        
-        var restResponseJson = "{\"media\":{\"title\":\"Alien\",\"releaseYear\":1979,\"imdbId\":\"tt0078748\",\"plot\":\"After a space merchant vessel perceives an unknown transmission as a distress call, its landing on the source moon finds one of the crew attacked by a mysterious lifeform, and they soon realize that its life cycle has merely begun.\",\"actors\":[\"Tom Skerritt\",\"Sigourney Weaver\",\"Veronica Cartwright\",\"Harry Dean Stanton\"],\"posterUrl\":\"https://m.media-amazon.com/images/M/MV5BMmQ2MmU3NzktZjAxOC00ZDZhLTk4YzEtMDMyMzcxY2IwMDAyXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg\"},\"torrents\":[{\"name\":\"Placeholder torrent\",\"sizeInBytes\":1234567,\"addedDate\":\"2020-01-29T16:29:39.2397817+00:00\",\"fileCount\":2,\"trackerName\":\"Placeholder tracker\",\"trackerUrl\":\"http://localhost\"}]}";
-        
-        IRestResponse restResponse = new RestResponse
+        [SetUp]
+        public void Setup()
         {
-            Content = restResponseJson,
-            ResponseStatus = ResponseStatus.Completed,
-            StatusCode = System.Net.HttpStatusCode.OK
-        };
+            appSettingsMock = new Mock<IAppSettings>();
+            appSettingsMock.SetupGet(x => x.TorrentFinderApiUrl).Returns("https://www.google.com");
 
-        restClientMock
-          .Setup(x => x.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
-          .Returns(Task.FromResult(restResponse));
+            restClientMock = new Mock<IRestClient>();
 
-        // Act
+            service = new TorrentFinderHttpService(
+              appSettingsMock.Object, restClientMock.Object);
+        }
 
-        var resp = (TitleResponse)await service.SearchTitle(Helpers.GetRandomString());
+        [Test]
+        public async Task SearchTitle_WhenSuccessful_ReturnsTitleResponse()
+        {
+            // Arrange
+        
+            IRestResponse restResponse = GetDummySuccessfulRestResponse();
 
-        // Assert
+            restClientMock
+                .Setup(x => x.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+                .Returns(Task.FromResult(restResponse));
 
-        Assert.IsNotEmpty(resp.Media.Title);
-        Assert.IsNotEmpty(resp.Media.PosterUrl);
-        Assert.IsNotEmpty(resp.Media.Plot);
-        Assert.IsNotEmpty(resp.Media.IMDBId);
+            // Act
+
+            var resp = (TitleResponse)await service.SearchTitle(Helpers.GetRandomString());
+
+            // Assert
+
+            Assert.IsTrue(resp.Successful);
+            Assert.IsNotEmpty(resp.Media.Title);
+            Assert.IsNotEmpty(resp.Media.PosterUrl);
+            Assert.IsNotEmpty(resp.Media.Plot);
+            Assert.IsNotEmpty(resp.Media.IMDBId);
+        }
+
+        [Test]
+        public async Task SearchTitle_WhenResponseNotSuccessful_ReturnsErrorResponse()
+        {
+            // Arrange
+
+            IRestResponse restResponse = GetDummyUnSuccessfulRestResponse();
+
+            restClientMock
+                .Setup(x => x.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+                .Returns(Task.FromResult(restResponse));
+
+            // Act
+
+            var resp = (ErrorResponse)await service.SearchTitle(Helpers.GetRandomString());
+
+            // Assert
+
+            Assert.IsNotEmpty(resp.Error);
+            Assert.IsFalse(resp.Successful);
+        }
+
+        [Test]
+        public void SearchTitle_WhenTitleArgumentNull_ThrowsArgumentNullException()
+        {
+            Assert.ThrowsAsync<ArgumentNullException>(async () =>  await service.SearchTitle(null));
+        }
+          
+        [Test]
+        public void SearchTitle_WhenTitleArgumentEmpty_ThrowsArgumentNullException()
+        {
+            Assert.ThrowsAsync<ArgumentNullException>(async () =>  await service.SearchTitle(""));
+        }
+
+        IRestResponse GetDummySuccessfulRestResponse()
+        {
+            return new RestResponse
+            {
+                Content = SuccessfulRestResponseJSON,
+                ResponseStatus = ResponseStatus.Completed,
+                StatusCode = System.Net.HttpStatusCode.OK
+            };
+        }
+
+        IRestResponse GetDummyUnSuccessfulRestResponse()
+        {
+            return new RestResponse
+            {
+                Content = UnSuccessfulRestResponseJSON,
+                ResponseStatus = ResponseStatus.Error,
+                StatusCode = System.Net.HttpStatusCode.InternalServerError
+            };
+        }
     }
-
-    [Test]
-    public void SearchTitle_WhenResponseNotSuccessful_ReturnsErrorResponse()
-    {
-
-    }
-  }
 }
