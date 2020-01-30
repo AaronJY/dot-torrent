@@ -79,13 +79,70 @@ namespace DotTorrent.Web.Tests.Services
         [Test]
         public void SearchTitle_WhenTitleArgumentNull_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>  await service.SearchTitle(null));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SearchTitle(null));
         }
           
         [Test]
         public void SearchTitle_WhenTitleArgumentEmpty_ThrowsArgumentNullException()
         {
-            Assert.ThrowsAsync<ArgumentNullException>(async () =>  await service.SearchTitle(""));
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SearchTitle(""));
+        }
+
+        [Test]
+        public async Task SearchIMDBId_WhenSuccessful_ReturnsTitleResponse()
+        {
+            // Arrange
+        
+            IRestResponse restResponse = GetDummySuccessfulRestResponse();
+
+            restClientMock
+                .Setup(x => x.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+                .Returns(Task.FromResult(restResponse));
+
+            // Act
+
+            var resp = (TitleResponse)await service.SearchIMDBId(Helpers.GetRandomString());
+
+            // Assert
+
+            Assert.IsTrue(resp.Successful);
+            Assert.IsNotEmpty(resp.Media.Title);
+            Assert.IsNotEmpty(resp.Media.PosterUrl);
+            Assert.IsNotEmpty(resp.Media.Plot);
+            Assert.IsNotEmpty(resp.Media.IMDBId);
+        }
+
+        [Test]
+        public async Task SearchIMDBId_WhenResponseNotSuccessful_ReturnsErrorResponse()
+        {
+            // Arrange
+
+            IRestResponse restResponse = GetDummyUnSuccessfulRestResponse();
+
+            restClientMock
+                .Setup(x => x.ExecuteTaskAsync(It.IsAny<IRestRequest>()))
+                .Returns(Task.FromResult(restResponse));
+
+            // Act
+
+            var resp = (ErrorResponse)await service.SearchIMDBId(Helpers.GetRandomString());
+
+            // Assert
+
+            Assert.IsNotEmpty(resp.Error);
+            Assert.IsFalse(resp.Successful);
+        }
+
+        [Test]
+        public void SearchIMDBId_WhenTitleArgumentNull_ThrowsArgumentNullException()
+        {
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SearchIMDBId(null));
+        }
+          
+        [Test]
+        public void SearchIMDBId_WhenTitleArgumentEmpty_ThrowsArgumentNullException()
+        {
+            Assert.ThrowsAsync<ArgumentNullException>(async () => await service.SearchIMDBId(""));
         }
 
         IRestResponse GetDummySuccessfulRestResponse()
