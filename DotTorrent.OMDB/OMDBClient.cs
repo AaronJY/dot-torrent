@@ -1,5 +1,6 @@
 ﻿using DotTorrent.OMDB.Enums;
 using DotTorrent.OMDB.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
@@ -15,8 +16,11 @@ namespace DotTorrent.OMDB
 
         readonly IRestClient restClient;
 
-        public OMDBClient(IRestClient restClient)
+        public OMDBClient()
         {
+            IServiceProvider serviceProvider = Internal.GetServiceProvider();
+            restClient = serviceProvider.GetService<IRestClient>();
+
             this.restClient = restClient;
         }
 

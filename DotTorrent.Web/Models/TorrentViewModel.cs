@@ -10,7 +10,7 @@ namespace DotTorrent.Web.Models
 
     public ulong SizeInBytes { get; set; }
 
-    public string PrettySize => Conversion.DisplaySizeFromBytes(SizeInBytes);
+    public string PrettySize => Conversion.GetPrettySize(SizeInBytes);
 
     public DateTime AddedDate { get; set; }
 
